@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="ka">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TechnoSolution</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root{
+      --brand:#0a74da;
+      --ink:#0f1724;
+      --muted:rgba(31,41,55,0.72);
+      --paper:#ffffff;
+      --accent:#6fb1ff;
+      --ok:#22a55e;
+      --accent-2:#0ea5a4;
+      --glass: rgba(255,255,255,0.8);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      color:var(--ink);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(10,116,218,0.06), transparent 6%),
+        radial-gradient(900px 500px at 90% 85%, rgba(107,185,255,0.04), transparent 12%),
+        linear-gradient(180deg,#f6fbff 0%, #eef6ff 100%),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><g fill='none' stroke='%230a74da' stroke-opacity='0.06' stroke-width='1'><rect x='6' y='6' width='36' height='36' rx='3'/><rect x='78' y='6' width='36' height='36' rx='3'/><rect x='6' y='78' width='36' height='36' rx='3'/><path d='M42 24h36M24 42v36M96 42v36M42 96h36' stroke-opacity='0.04'/></g></svg>");
+      background-repeat: repeat;
+      min-height:100%;
+    }
+
+    /* floating */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(10,116,218,0.06), transparent 6%),
+        radial-gradient(circle at 80% 80%, rgba(107,185,255,0.04), transparent 8%);
+      z-index:0;
+      mix-blend-mode: screen;
+      animation: floatBG 20s linear infinite;
+      opacity:0.95;
+    }
+    @keyframes floatBG{ 0%{transform:translateY(0)}50%{transform:translateY(-8px)}100%{transform:translateY(0)} }
+
+    /* header */
+    header{
+      position:relative; z-index:5;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:14px; padding:14px 20px; margin:14px; border-radius:12px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.94), rgba(250,252,255,0.92));
+      box-shadow: 0 10px 30px rgba(8,30,60,0.06);
+      backdrop-filter: blur(6px);
+    }
+    .branding{display:flex;align-items:center;gap:12px}
+    .logo{width:64px;height:64px;border-radius:12px;overflow:hidden;flex:0 0 64px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--brand),var(--accent));box-shadow:0 6px 18px rgba(10,20,40,0.06)}
+    .logo img{width:100%;height:100%;object-fit:cover;display:block}
+    header h1{margin:0;font-size:1.2rem;color:var(--brand)}
+    header p{margin:0;color:var(--muted);font-size:0.85rem}
+
+    /* nav */
+    nav{display:flex;align-items:center;gap:8px}
+    .nav-btn{background:none;border:1px solid rgba(10,116,218,0.12);color:var(--brand);padding:8px 12px;border-radius:10px;cursor:pointer}
+    .nav-btn:hover{background:rgba(10,116,218,0.06)}
+    .primary-btn{background:var(--brand);color:white;border:none;padding:9px 14px;border-radius:10px;cursor:pointer;box-shadow:0 8px 20px rgba(10,116,218,0.12)}
+    .primary-btn:hover{opacity:0.95}
+
+    .container{max-width:1150px;margin:10px auto;padding:0 18px;position:relative;z-index:5}
+
+    /* auth area (popup panels) */
+    .modal{
+      position:fixed; left:50%; top:50%; transform:translate(-50%,-50%);
+      z-index:99999; display:none; width:320px; max-width:92%;
+      background:linear-gradient(180deg,var(--paper),#fbfeff); padding:14px; border-radius:12px;
+      box-shadow:0 18px 60px rgba(8,30,60,0.18);
+    }
+    .modal h3{margin:0 0 8px 0;color:var(--brand)}
+    .modal .close{position:absolute;right:8px;top:8px;background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted)}
+    input,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(5,60,120,0.06);margin:8px 0;background:white}
+    .submit-btn{background:var(--ok);color:white;padding:10px;border-radius:10px;border:none;cursor:pointer; width:100%}
+    .small{font-size:0.9rem;color:var(--muted)}
+
+    /* hero */
+    .hero{border-radius:14px;overflow:hidden;position:relative;box-shadow:0 12px 40px rgba(8,30,60,0.08);background:linear-gradient(180deg, rgba(255,255,255,0.8), rgba(250,252,255,0.85));padding:12px;margin-top:10px}
+    .heroVideoWrap{display:flex;justify-content:center}
+    .hero video{display:block;border-radius:10px; width:100%; max-width:880px; height:auto; box-shadow:0 10px 30px rgba(8,30,60,0.06)}
+    .hero-text{font-size:1.6rem;font-weight:800;text-align:center;padding:12px 8px;color:var(--brand)}
+    .hero-sub{color:var(--muted);text-align:center;margin-top:6px;font-size:1rem}
+
+    /* media & info */
+    .media-row{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;align-items:flex-start;justify-content:center}
+    .media-card{background:linear-gradient(180deg,#ffffff,#fbfeff);padding:12px;border-radius:12px;box-shadow:0 10px 30px rgba(8,30,60,0.06);flex:1 1 420px;max-width:520px}
+    .media-card img{width:100%;height:auto;border-radius:10px}
+    .media-caption{font-weight:700;color:var(--brand);text-align:center;margin-top:10px}
+    .media-note{color:var(--muted);text-align:center;margin-top:8px}
+
+    .info-block{background:linear-gradient(180deg,#fff,#fbfeff);padding:14px;border-radius:12px;box-shadow:0 8px 20px rgba(8,30,60,0.04);margin-bottom:12px}
+    .info-block h4{margin:0 0 8px 0;color:var(--brand)}
+    .info-block p{margin:0;color:var(--muted);line-height:1.5}
+
+    /* services */
+    h2.section-title{text-align:center;color:var(--brand);margin-top:28px}
+    .services{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+    .service{background:linear-gradient(180deg,#ffffff,#f7fbff);padding:18px;border-radius:12px;max-width:260px;flex:1 1 220px;text-align:center;box-shadow:0 10px 30px rgba(8,30,60,0.06)}
+    .service i{font-size:42px;color:var(--brand);margin-bottom:8px}
+    .service p.small{color:var(--muted);margin:6px 0}
+    .price-details{display:none;margin-top:10px;color:var(--muted);font-weight:600}
+    .price-btn{margin-top:10px;padding:8px 12px;border-radius:10px;border:2px solid var(--ok);color:var(--ok);background:none;cursor:pointer;font-weight:700}
+    .price-btn:hover{background:var(--ok);color:white}
+
+    /* reviews */
+    .reviews{margin-top:22px}
+    .comment-item{background:linear-gradient(180deg,#f8ffff,#eafaff);border:1px solid #dff4ff;padding:12px;border-radius:10px;margin:10px 0}
+    .review-box{display:flex;gap:8px;flex-direction:column}
+    .review-submit-note{font-size:0.9rem;color:var(--muted);margin-top:6px}
+
+    /* chat/admin */
+    #chat-container{position:fixed;right:18px;bottom:18px;z-index:9999}
+    #chat-button{background:linear-gradient(135deg,var(--brand),var(--accent));color:white;padding:12px 14px;border-radius:999px;cursor:pointer;box-shadow:0 10px 28px rgba(10,116,218,0.18);display:flex;align-items:center;gap:8px}
+    #chat-box{display:none;width:360px;max-height:520px;background:white;border-radius:12px;overflow:hidden;box-shadow:0 12px 36px rgba(8,30,60,0.12)}
+    #chat-header{background:linear-gradient(90deg,var(--brand),var(--accent));color:white;padding:12px;display:flex;justify-content:space-between;align-items:center}
+    #chat-messages{padding:12px;max-height:320px;overflow:auto;background:linear-gradient(180deg,#fbfeff,#f7fbff)}
+    .message{padding:8px 10px;border-radius:10px;margin:8px 0}
+    .message.user{background:#e8faff}
+    .message.admin{background:var(--brand);color:white}
+
+    /* about + contact */
+    .about{margin-top:18px;background:linear-gradient(180deg,#fff,#fbfeff);padding:14px;border-radius:12px;box-shadow:0 8px 20px rgba(8,30,60,0.04)}
+    .about h3{margin:0 0 6px 0;color:var(--brand)}
+    .about p{margin:6px 0;color:var(--muted);line-height:1.6}
+    .fb-link{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;background:linear-gradient(90deg,#e8f5ff,#f2fbff);border:1px solid rgba(10,116,218,0.08);color:var(--brand);text-decoration:none;font-weight:700}
+
+    /* responsiveness */
+    @media (max-width:900px){
+      header{flex-direction:column;align-items:flex-start;padding:12px;margin:8px}
+      .hero-text{font-size:1.15rem}
+      .services{gap:12px}
+      #chat-box{width:320px}
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <div class="branding">
+      <div class="logo" title="TechnoSolution">
+        <img src="https://raw.githubusercontent.com/giorgitumanishvili991-web/Techno-Solut1on/main/logo.jpg"
+             alt="logo"
+             onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2264%22 height=%2264%22><rect width=%2264%22 height=%2264%22 fill=%230a74da/><text x=%2232%22 y=%2238%22 fill=%22white%22 font-size=%2218%22 font-family=%22sans-serif%22 text-anchor=%22middle%22>TS</text></svg>'" />
+      </div>
+      <div>
+        <h1>TechnoSolution</h1>
+        <p>ტехнологიები, რომლებსაც შეგიძლია ენდო</p>
+      </div>
+    </div>
+
+    <nav>
+      <button class="nav-btn" id="btn-login">შესვლა</button>
+      <button class="nav-btn" id="btn-register">რეგისტრაცია</button>
+      <button class="primary-btn" id="btn-contact" title="Message" onclick="toggleChat()"><i class="fa-solid fa-comment"></i>&nbsp;Message</button>
+    </nav>
+  </header>
+
+  <!-- Auth modals -->
+  <div class="modal" id="modal-login" role="dialog" aria-modal="true">
+    <button class="close" onclick="closeModal('modal-login')">&times;</button>
+    <h3>ავტორიზაცია</h3>
+    <input id="login-name" placeholder="სახელი" />
+    <input id="login-pass" type="password" placeholder="პაროლი" />
+    <button class="submit-btn" onclick="loginUser()">შესვლა</button>
+    <div class="small" style="margin-top:8px">ადმინი: GoldenIT (პაროლი შენს მიერ შემოთავაზებული)</div>
+  </div>
+
+  <div class="modal" id="modal-register" role="dialog" aria-modal="true">
+    <button class="close" onclick="closeModal('modal-register')">&times;</button>
+    <h3>რეგისტრაცია</h3>
+    <input id="reg-name" placeholder="სახელი" />
+    <input id="reg-pass" type="password" placeholder="პაროლი" />
+    <button class="submit-btn" onclick="registerUser()">რეგისტრაცია</button>
+    <div class="small" style="margin-top:8px">რეგისტრაციის შემდეგ შეძლებთ შეფასების და მესიჯის გაგზავნას.</div>
+  </div>
+
+  <div class="container">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="heroVideoWrap">
+        <video id="heroVideo" src="https://raw.githubusercontent.com/giorgitumanishvili991-web/Techno-Solut1on/main/video.mp4"
+               playsinline autoplay muted loop onerror="this.style.display='none'"></video>
+      </div>
+      <div class="hero-text">დღეს რამდენად მნიშვნელოვანია ტექნოლოგიები</div>
+      <div class="hero-sub">ტექნოლოგიური გადაწყვეტილებები აჩქარებენ ბიზნესს, ზრდიან უსაფრთხოებას და ამარტივებენ ყოველდღიურობას.</div>
+    </section>
+
+    <!-- media + about -->
+    <div class="media-row">
+      <div class="media-card">
+        <img id="cameraPhoto" src="https://raw.githubusercontent.com/giorgitumanishvili991-web/Techno-Solut1on/main/photo.jpg" alt="ვიდეოკამერები"
+             onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22500%22 height=%22300%22><rect width=%22500%22 height=%22300%22 fill=%23eaf6ff/><text x=%22250%22 y=%22150%22 font-size=%2220%22 font-family=%22sans-serif%22 text-anchor=%22middle%22 fill=%230a74da%22>Photo not found</text></svg>'" />
+        <div class="media-caption">ვიდეოკამერები &amp; უსაფრთხოება</div>
+        <div class="media-note">ვიდეოკამერები არ არის მხოლოდ ჩანაწერი — ეს არის პრევენცია, მტკიცებულება და მშვიდობის გარანტია.</div>
+      </div>
+
+      <div style="flex:1 1 420px;max-width:520px;display:flex;flex-direction:column;gap:12px;justify-content:center">
+        <div class="info-block">
+          <h4>TechnoSolution | თქვენი IT პარტნიორი.</h4>
+          <p>TechnoSolution გთავაზობთ თანამედროვე IT გადაწყვეტებს კერძო პირებსა და კომპანიებს. გეხმარებით ტექნოლოგიური გამოწვევების გადაჭრაში — კონსულტაციიდან დაწყებული, მხარდაჭერითა და ინფრასტრუქტურის შექმნით დასრულებული.</p>
+          <p style="margin-top:10px"><a class="fb-link" href="https://www.facebook.com/profile.php?id=61563464626018" target="_blank" rel="noopener">შემოუერთდი ჩვენს Facebook ჯგუფს <i class="fa-brands fa-facebook"></i></a></p>
+        </div>
+
+        <div class="info-block">
+          <h4>რატომ არის უსაფრთხოება აუცილებელი?</h4>
+          <p>ვიდეოკამერები უზრუნველყოფენ რეალურ დროში მონიტორინგს, <strong>ამცირებენ</strong> დანაშაულს და გაძლევენ წვდომას გადარჩენისა და ანალიზის საშუალებებზე.</p>
+        </div>
+
+        <div class="info-block">
+          <h4>რამდენად საჭიროა დღეს ანტივირუსები?</h4>
+          <p>ანტივირუსები იცავს თქვენს მონაცემებს, აღკვეთს საფრთხეებს და უზრუნველყოფს უსაფრთხო ონლაინ მუშაობას. ისინი აუცილებელია როგორც კომპანიებისთვის, ისე პირადი მომხმარებლებისთვის.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- services -->
+    <h2 class="section-title">სერვისები</h2>
+    <div class="services" id="services-list">
+      <div class="service">
+        <i class="fa-solid fa-laptop"></i>
+        <h3>კომპიუტერული მომსახურება</h3>
+        <p class="small">Windows-ის დაყენება, პერიფერია, ოპტიმიზაცია</p>
+        <button class="price-btn" data-target="price1">ფასები</button>
+        <div class="price-details" id="price1">საშუალო ფასი თბილისში: <strong>50 ₾ — 120 ₾</strong></div>
+      </div>
+
+      <div class="service">
+        <i class="fa-solid fa-network-wired"></i>
+        <h3>სისტემური აუდიტი</h3>
+        <p class="small">ბიზნესის ინფრასტრუქტურის შემოწმება</p>
+        <button class="price-btn" data-target="price2">ფასები</button>
+        <div class="price-details" id="price2">საშუალო ფასი თბილისში: <strong>120 ₾ — 300 ₾</strong></div>
+      </div>
+
+      <div class="service">
+        <i class="fa-solid fa-camera"></i>
+        <h3>ვიდეო-უსაფრთხოების სისტემები</h3>
+        <p class="small">დაცვა, მონიტორინგი, ჩანაწერი</p>
+        <button class="price-btn" data-target="price3">ფასები</button>
+        <div class="price-details" id="price3">საშუალო ფასი თბილისში: <strong>180 ₾ — 450 ₾</strong></div>
+      </div>
+
+      <div class="service">
+        <i class="fa-solid fa-shield-halved"></i>
+        <h3>სისტემების დაცვა</h3>
+        <p class="small">პარეტის დაცვა და აღდგენა</p>
+        <button class="price-btn" data-target="price4">ფასები</button>
+        <div class="price-details" id="price4">საშუალო ფასი თბილისში: <strong>200 ₾ — 400 ₾</strong></div>
+      </div>
+    </div>
+
+    <!-- reviews -->
+    <div class="reviews" id="reviews-section">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h2 class="section-title" style="margin:0">შეფასებები</h2>
+        <div class="small" id="reviews-count" style="color:var(--brand);font-weight:700">0</div>
+      </div>
+
+      <div id="reviews-list" style="margin-top:12px"></div>
+
+      <div style="margin-top:12px" class="review-box">
+        <textarea id="reviewtext" placeholder="თქვენი შეფასება (საჭიროა ავტორიზაცია)" rows="3" style="border-radius:10px;padding:10px"></textarea>
+        <button id="review-submit" class="submit-btn" onclick="addReview()" disabled>გაგზავნეთ შეფასება</button>
+        <div class="review-submit-note" id="review-hint">შეფასების დასაწერად გაიარეთ ავტორიზაცია.</div>
+      </div>
+    </div>
+
+    <div style="height:40px"></div>
+  </div>
+
+  <!-- chat/admin -->
+  <div id="chat-container">
+    <div id="chat-button" onclick="toggleChat()"><i class="fa-solid fa-comment"></i> <span style="font-weight:700">Message</span></div>
+    <div id="chat-box" style="display:none">
+      <div id="chat-header">
+        <div style="font-weight:700">შეტყობინება</div>
+        <div id="chat-mode" style="background:rgba(232,246,255,0.9);color:#083c6a;padding:6px 10px;border-radius:999px;font-weight:700">სტატუსი</div>
+      </div>
+      <div id="chat-messages"></div>
+      <div style="padding:10px">
+        <input id="chat-input" placeholder="შენი შეტყობინება..." style="width:100%;padding:10px;border:1px solid #eee;border-radius:8px"/>
+        <div style="height:8px"></div>
+        <button id="chat-send" class="submit-btn" style="width:100%" onclick="sendMessage()">გაგზავნა</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ============================
+       Auth + storage + helpers
+       ============================ */
+    const ADMIN_USER = 'GoldenIT';
+    // SHA-256("GoldenEye14*")  (you provided this password)
+    const ADMIN_PASS_HASH = '8a6642a654b9f1a233d97331885e96ebd5f443ec86df8398424e014153720cbe';
+
+    let currentUser = JSON.parse(sessionStorage.getItem('currentUser') || 'null');
+
+    function getUsers(){ return JSON.parse(localStorage.getItem('users') || '[]'); }
+    function setUsers(u){ localStorage.setItem('users', JSON.stringify(u)); }
+
+    async function sha256Hex(str){
+      const enc = new TextEncoder();
+      const buf = await crypto.subtle.digest('SHA-256', enc.encode(str));
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+
+    /* UI: open/close modals */
+    document.getElementById('btn-login').addEventListener('click', ()=> openModal('modal-login'));
+    document.getElementById('btn-register').addEventListener('click', ()=> openModal('modal-register'));
+    function openModal(id){ document.getElementById(id).style.display='block'; }
+    function closeModal(id){ document.getElementById(id).style.display='none'; }
+
+    async function registerUser(){
+      const name = document.getElementById('reg-name').value.trim();
+      const pass = document.getElementById('reg-pass').value;
+      if(!name || !pass){ alert('შეავსეთ ყველა ველი'); return; }
+      if(name === ADMIN_USER){ alert('ეს სახელი დაკავებულია'); return; }
+      const users = getUsers();
+      if(users.find(u=>u.name===name)){ alert('სახელი უკვე არსებობს'); return; }
+      const passHash = await sha256Hex(pass);
+      users.push({name, passHash});
+      setUsers(users);
+      currentUser = {name, admin:false};
+      sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+      closeModal('modal-register');
+      renderNav();
+      applyAuthState();
+      alert('რეგისტრაცია დასრულდა — შემოხვედით როგორც '+name);
+    }
+
+    async function loginUser(){
+      const name = document.getElementById('login-name').value.trim();
+      const pass = document.getElementById('login-pass').value;
+      if(!name || !pass){ alert('შეავსეთ ყველაფერი'); return; }
+      const passHash = await sha256Hex(pass);
+      if(name === ADMIN_USER){
+        if(passHash === ADMIN_PASS_HASH){
+          currentUser = {name, admin:true};
+        } else { alert('არასწორი მონაცემები'); return; }
+      } else {
+        const users = getUsers();
+        const found = users.find(u=>u.name===name && u.passHash===passHash);
+        if(!found){ alert('არასწორი მონაცემები'); return; }
+        currentUser = {name, admin:false};
+      }
+      sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+      closeModal('modal-login');
+      renderNav();
+      applyAuthState();
+      alert('მოგესალმებით, '+currentUser.name);
+    }
+
+    function logout(){
+      currentUser = null;
+      sessionStorage.removeItem('currentUser');
+      renderNav();
+      applyAuthState();
+    }
+
+    /* Nav render */
+    function renderNav(){
+      const nav = document.querySelector('nav');
+      // show name + logout only inside header area update (we already have buttons there)
+      // We'll update the login/register visibility
+      // Already separate buttons exist; we can show user greeting after them
+      // Remove previous greeting if exists
+      const old = document.getElementById('user-greet');
+      if(old) old.remove();
+      if(currentUser){
+        const span = document.createElement('span');
+        span.id = 'user-greet';
+        span.style.marginLeft='12px';
+        span.style.color='var(--brand)';
+        span.style.fontWeight='700';
+        span.textContent = `მოგესალმებით, ${currentUser.name}` + (currentUser.admin ? ' (Admin)' : '');
+        nav.appendChild(span);
+        // replace login/register with small logout? we keep separate but user can still logout
+        const outBtn = document.createElement('button');
+        outBtn.className='nav-btn';
+        outBtn.textContent='გასვლა';
+        outBtn.onclick = logout;
+        nav.appendChild(outBtn);
+      }
+    }
+
+    /* Reviews */
+    function getReviews(){ return JSON.parse(localStorage.getItem('reviews') || '[]'); }
+    function setReviews(r){ localStorage.setItem('reviews', JSON.stringify(r)); }
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+    function renderReviews(){
+      const holder = document.getElementById('reviews-list');
+      const countEl = document.getElementById('reviews-count');
+      holder.innerHTML = '';
+      const list = getReviews().slice().sort((a,b)=>b.ts-a.ts);
+      countEl.textContent = list.length;
+      if(list.length===0){
+        holder.innerHTML = '<div style="color:var(--muted)">ჯერ არ არის შეფასებები — იყავით პირველი ⭐</div>';
+        return;
+      }
+      for(const r of list){
+        const div = document.createElement('div');
+        div.className='comment-item';
+        div.innerHTML = `<strong style="color:var(--brand)">${escapeHtml(r.user)}</strong>
+                         <div style="color:var(--muted);font-size:0.85rem">${new Date(r.ts).toLocaleString()}</div>
+                         <div style="margin-top:6px">${escapeHtml(r.text)}</div>`;
+        holder.appendChild(div);
+      }
+    }
+
+    function addReview(){
+      if(!currentUser){ alert('შეფასების დასაწერად გაიარეთ ავტორიზაცია'); return; }
+      const text = document.getElementById('reviewtext').value.trim();
+      if(!text){ alert('ტექსტი ცარიელია'); return; }
+      const list = getReviews();
+      list.push({id:Date.now(), user:currentUser.name, text, ts:Date.now()});
+      setReviews(list);
+      document.getElementById('reviewtext').value='';
+      renderReviews();
+    }
+
+    /* Messages */
+    function getMsgs(){ return JSON.parse(localStorage.getItem('messages') || '[]'); }
+    function setMsgs(m){ localStorage.setItem('messages', JSON.stringify(m)); }
+
+    function sendMessage(){
+      if(!currentUser){ alert('შეტყობინების დასაგზავნად გაიარეთ ავტორიზაცია'); return; }
+      const text = document.getElementById('chat-input').value.trim();
+      if(!text) return;
+      const msgs = getMsgs();
+      msgs.push({id:Date.now(), from: currentUser.name, text, reply:'', ts:Date.now()});
+      setMsgs(msgs);
+      document.getElementById('chat-input').value='';
+      renderChat();
+      alert('შეტყობინება გაგზავნილია!');
+    }
+
+    function renderChat(){
+      const box = document.getElementById('chat-messages');
+      const mode = document.getElementById('chat-mode');
+      box.innerHTML = '';
+      const msgs = getMsgs().slice().sort((a,b)=>b.ts-a.ts);
+      if(currentUser?.admin){
+        mode.textContent = 'ადმინის რეჟიმი';
+        if(msgs.length===0){ box.innerHTML = '<div style="color:var(--muted);padding:8px">ჯერ არ არის შეტყობინებები</div>'; }
+        for(const m of msgs){
+          const uDiv = document.createElement('div');
+          uDiv.className='message user';
+          uDiv.innerHTML = `<strong>${escapeHtml(m.from)}</strong>
+                            <div style="font-size:0.85rem;color:var(--muted)">${new Date(m.ts).toLocaleString()}</div>
+                            <div style="margin-top:6px">${escapeHtml(m.text)}</div>`;
+          box.appendChild(uDiv);
+
+          const replyWrap = document.createElement('div');
+          replyWrap.style.marginTop='6px';
+          const input = document.createElement('input');
+          input.placeholder='პასუხი...'; input.value = m.reply || '';
+          input.style.width='100%'; input.style.padding='8px'; input.style.border='1px solid #eee'; input.style.borderRadius='8px';
+          const btn = document.createElement('button'); btn.className='submit-btn'; btn.textContent='პასუხი'; btn.style.marginTop='6px';
+          btn.onclick = ()=>{ m.reply = input.value; setMsgs(msgs); renderChat(); };
+          replyWrap.appendChild(input); replyWrap.appendChild(btn);
+          box.appendChild(replyWrap);
+
+          if(m.reply){
+            const adminResp = document.createElement('div'); adminResp.className='message admin'; adminResp.style.marginTop='8px';
+            adminResp.innerHTML = `<strong>Admin</strong><div style="margin-top:6px">${escapeHtml(m.reply)}</div>`;
+            box.appendChild(adminResp);
+          }
+        }
+      } else {
+        mode.textContent = currentUser ? 'მომხმარებლის რეჟიმი' : 'სტუმარი';
+        box.innerHTML = '<div style="color:var(--muted);padding:8px">მხოლოდ გაგზავნაა შესაძლებელი. ისტორია ჩანს მხოლოდ ადმინს.</div>';
+      }
+    }
+
+    /* Chat UI toggle */
+    function toggleChat(){
+      const cb = document.getElementById('chat-box');
+      cb.style.display = cb.style.display==='block' ? 'none' : 'block';
+      renderChat();
+    }
+
+    /* Price buttons */
+    function initPriceButtons(){ document.querySelectorAll('.price-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const id = btn.getAttribute('data-target');
+        const el = document.getElementById(id);
+        if(!el) return;
+        el.style.display = (getComputedStyle(el).display==='none') ? 'block' : 'none';
+        if(getComputedStyle(el).display!=='none') el.scrollIntoView({behavior:'smooth', block:'center'});
+      });
+    }); }
+
+    /* Apply auth state (enable/disable review & message) */
+    function applyAuthState(){
+      const canWrite = !!currentUser;
+      document.getElementById('review-submit').disabled = !canWrite;
+      document.getElementById('reviewtext').disabled = !canWrite;
+      document.getElementById('reviewtext').placeholder = canWrite ? 'თქვენი შეფასება' : 'თქვენი შეფასება (საჭიროა ავტორიზაცია)';
+      document.getElementById('review-hint').style.display = canWrite ? 'none' : 'block';
+      // Chat send button: keep enabled but enforce on send
+      renderNav();
+      renderReviews();
+      renderChat();
+    }
+
+    /* Init on load */
+    window.addEventListener('DOMContentLoaded', ()=>{
+      renderNav();
+      initPriceButtons();
+      applyAuthState();
+      // Ensure modals close on ESC
+      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ closeModal('modal-login'); closeModal('modal-register'); }});
+    });
+
+    // small UX: click outside modal closes it
+    window.addEventListener('click', function(e){
+      ['modal-login','modal-register'].forEach(id=>{
+        const el = document.getElementById(id);
+        if(!el) return;
+        if(el.style.display==='block' && !el.contains(e.target) && !document.getElementById('btn-login').contains(e.target) && !document.getElementById('btn-register').contains(e.target)){
+          el.style.display='none';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
